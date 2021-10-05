@@ -1,0 +1,84 @@
+﻿
+@{
+//Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div class="card mb-3" style="width:30%; float:left; margin:10px;">
+        <svg class="d-block user-select-none" width="100%" height="100" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
+            <rect width="100%" height="100%" fill="#343a40"></rect>
+            <text x="50%" y="50%" fill="#ffffff" dy=".3em">Content Moderation</text>
+        </svg>
+        <div class="card-body">
+            <p class="card-text" style="text-align:center">Access to pages for manipulating with the content of the app.</p>
+        </div>
+        <ul class="list-group list-group-flush" style="text-align:center">
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="Media" asp-action="Index" class="btn">Media</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="Company" asp-action="Index" class="btn">Companies</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="Location" asp-action="Index" class="btn">Locations</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="Person" asp-action="Index" class="btn">People</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="Character" asp-action="Index" class="btn">Characters</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="City" asp-action="Index" class="btn">Cities</a>
+            </li>
+            <li class="list-group-item" style="margin-bottom: 40px">
+                <a asp-area="" asp-controller="Color" asp-action="Index" class="btn">Color Schemes</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card mb-3" style="width:30%; float:left; margin:10px;">
+        <svg class="d-block user-select-none" width="100%" height="100" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
+            <rect width="100%" height="100%" fill="#343a40"></rect>
+            <text x="50%" y="50%" fill="#ffffff" dy=".3em">User Moderation</text>
+        </svg>
+        <div class="card-body" style="text-align:center">
+            <p class="card-text">Access to pages for moderating the users of the app.</p>
+        </div>
+        <ul class="list-group list-group-flush" style="text-align:center">
+            <li class="list-group-item">
+                <a class="btn" href="https://users.p1752.app.fit.ba">Users</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card mb-3" style="width:30%; float:left; margin:10px;">
+        <svg class="d-block user-select-none" width="100%" height="100" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
+            <rect width="100%" height="100%" fill="#343a40"></rect>
+            <text x="50%" y="50%" fill="#ffffff" dy=".3em">Admin Tools</text>
+        </svg>
+        <div class="card-body">
+            <p class="card-text" style="text-align:center">Access to pages that contain core admin functions.</p>
+        </div>
+        <ul class="list-group list-group-flush" style="text-align:center">
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="RoleManager" asp-action="Index" class="btn">Role Management</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="UserRoles" asp-action="Index" class="btn">User Roles</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="Mistake" asp-action="Index" class="btn">Mistake Reports</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-area="" asp-controller="CommentReports" asp-action="Index" class="btn">Comment Reports</a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

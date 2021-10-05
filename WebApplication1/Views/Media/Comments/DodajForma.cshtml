@@ -1,0 +1,15 @@
+﻿@using WebApplication1.ViewModels
+
+@model AddCommentVM
+
+    <div>
+        <form asp-controller="Comments" asp-action="AddComment" method="post">
+            @Html.AntiForgeryToken()
+            <input asp-for="MediaID" type="hidden" />
+            <input asp-for="UserID" type="hidden" />
+            @*<input asp-for="CommentContent" />*@
+            <textarea style="width: 100%" asp-for="CommentContent" ></textarea>
+
+            <button type="submit"> Comment </button>
+        </form>
+    </div>

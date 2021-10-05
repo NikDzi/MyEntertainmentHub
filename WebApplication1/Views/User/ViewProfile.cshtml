@@ -1,0 +1,314 @@
+﻿@using WebApplication1.ViewModels;
+@using Microsoft.AspNetCore.Identity;  
+@using ClassLibrary1.Model; 
+@using WebApplication1.Controllers;
+@model UserProfileVM
+@inject UserManager<AppUser> UserManager
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container bootdey">
+    <div class="content-page">
+        <div class="profile-banner" style="        background: url(https://i.imgur.com/LBzyYGB.png);">
+            @*<div><img src="~/uploads/banner.png" alt="Alternate Text" style="width:100%; top:0; position:absolute" /></div>*@
+            <div class="col-sm-3 avatar-container" style="border-color:red;">
+                @if (Model.ProfilePicture == null)
+                {
+                    if (Model.UserID == UserManager.GetUserId(User))
+                    {
+                        <a asp-controller="Image" asp-action="Selectpfp" asp-route-UserID="@Model.UserID"> <img style="height:200px;width:200px" src="~/uploads/defaultpfp.png" alt="User Avatar" class="img-circle profile-avatar"> </a>
+
+                    }
+                    else
+                    {
+                        <img style="height:200px;width:200px" src="~/uploads/defaultpfp.png" alt="User Avatar" class="img-circle profile-avatar">
+                }
+
+                }
+                else
+                {
+                if (Model.ProfilePicture != null)
+                {
+                if (Model.UserID == UserManager.GetUserId(User))
+                {
+                <a asp-controller="Image" asp-action="Changepfp" asp-route-UserID="@Model.UserID"> <img style="height:200px;width:200px" src="~/uploads/@Model.ProfilePicture.ImageUniqueFilename" alt="User Avatar" class="img-circle profile-avatar"> </a>
+
+                }
+                else
+                {
+                <img style="height:200px;width:200px" src="~/uploads/@Model.ProfilePicture.ImageUniqueFilename" alt="User Avatar" class="img-circle profile-avatar">
+                }
+                }
+
+                else
+                {
+                <img src="~/uploads/defaultpfp.png" alt="User Avatar" class="img-circle profile-avatar">
+                }
+                }
+</div>@*~/uploads/@Model.ProfilePicture.ImageUniqueFilename*@
+            <div class="col-sm-12 profile-actions text-right">
+                @if (Model.UserID == UserManager.GetUserId(User))
+                {
+                    <a id="manage" class="btn btn-primary btn-sm" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage</a>
+                }
+                @*<a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@Model.UserID</a>*@
+            </div>
+        </div>
+        <div class="content">
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <!-- Begin user profile -->
+                    <div class="text-center user-profile-2" style="margin-top:120px">
+                        <ul class="list-group">     
+                            <li class="list-group-item">
+                                <h4> <b>@Model.Username</b></h4>
+                                <h5>@Model.Role</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge">Rating</span>
+                                @Model.Rating
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge">@Model.Comments.Count()</span>
+                                Comments
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge">@Model.WatchListedMedia.Count()</span>
+                                In Watchlist
+                            </li>
+                        </ul>
+
+                       
+                    </div><!-- End div .box-info -->
+                    <!-- Begin user profile -->
+                </div><!-- End div .col-sm-4 -->
+
+                <div class="col-sm-9">
+                    <div class="widget widget-tabbed">
+                        <!-- Nav tab -->
+                        <!-- End nav tab -->
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+
+
+                            <!-- Tab timeline -->
+                            <div class="tab-pane animated active fadeInRight" id="my-timeline">
+                                <div class="user-profile-content">
+
+                                    <!-- Begin timeline -->
+                                    <div class="the-timeline">
+                                        <span readonly style="width:100%; box-sizing:border-box; font:bold; background-color:lightgray; text-align:center;font-size:x-large" class="form-control"> @Model.Username's activity</span>
+                                        <br><br>
+                                        <div class="row">
+                                            <div class="column">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th style="box-sizing:border-box; font:bolder; background-color:lightgray; text-align:center;font-size:large">@Model.Username's Comments</th>
+
+                                                    </tr>
+                                                    @foreach (var item in Model.Comments)
+                                                    {
+                                                        <tr>
+                                                            <td style="text-align:center;font:bold;">
+                                                                <a asp-controller="Media" asp-action="PrikazDetaljno" asp-route-MediaID="@item.MediaID"> @item.Media.MediaName</a>
+                                                                    
+                                                                    <br />
+                                                                    @item.CommentContent
+</td>
+                                                        </tr>
+                                                    }
+
+                                                </table>
+                                            </div>
+                                            <div class="column">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th style="box-sizing:border-box; font:bolder; background-color:lightgray; text-align:center;font-size:large">@Model.Username's Watchlist</th>
+
+                                                    </tr>
+                                                    @foreach (var item in Model.WatchListedMedia)
+                                                    {
+
+                                                        <tr>
+                                                            <td style="text-align:center;font:bold;">
+                                                                <a asp-controller="Media" asp-action="PrikazDetaljno" asp-route-MediaID="@item.MediaID"> @item.MediaName (@item.ReleaseDate.ToString("yyyy")) </a>
+                                                                <br />
+                                                                 
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div><!-- End div .the-timeline -->
+                                    <!-- End timeline -->
+                                </div><!-- End div .user-profile-content -->
+                            </div><!-- End div .tab-pane -->
+                            <!-- End Tab timeline -->
+
+                        </div><!-- End div .tab-content -->
+                    </div><!-- End div .box-info -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <style>
+        body {
+            background-color: #e9ebee;
+            
+        }
+
+        .profile-banner {
+
+            width: 100%;
+            height: 300px;
+            background-position: center center;
+            background-size: cover;
+            position: relative;
+            background-color: #252932;
+            border-bottom: 4px solid #fff;
+            box-shadow: 2px 0px 4px rgba(0,0,0,0.1);
+        }
+
+        .avatar-container {
+            height: 300px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 200px;
+            position: relative;
+            margin: 0px auto;
+            margin-top: 196px;
+            border: 4px solid #dc143c;
+        }
+
+        .profile-actions {
+            position: absolute;
+            bottom: 20px;
+        }
+
+        .user-profile-2 {
+            margin-top: 50px;
+        }
+
+        .user-profile-sidebar {
+            margin: 0 0 20px 0;
+        }
+
+            .user-profile-sidebar .user-identity {
+                margin: 20px 0 0 0;
+            }
+
+            .user-profile-sidebar img {
+                width: 90px;
+            }
+
+        .account-status-data {
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px dashed #ddd;
+            border-bottom: 1px dashed #ddd;
+            margin: 10px 0 20px 0;
+        }
+
+            .account-status-data h5 {
+                font-size: 11px;
+                line-height: 150%;
+                color: #909090;
+            }
+
+        .user-button {
+            margin: 15px 0;
+        }
+
+            .user-button .btn {
+                margin: 5px 0;
+            }
+
+        #social {
+            padding: 10px;
+            background: #E5E9EC;
+            text-align: center;
+        }
+
+            #social a:hover {
+                text-decoration: none;
+            }
+
+        .fa-circle.facebook {
+            color: #5471AE;
+        }
+
+        .fa-circle.twitter {
+            color: #4EC6F6;
+        }
+
+        .fa-circle.gplus {
+            color: #E24E3E;
+        }
+
+        .fa-circle.tumblr {
+            color: #4D77A3;
+        }
+
+        .fa-circle.linkedin {
+            color: #3097CE;
+        }
+
+        .user-profile-content {
+            margin: 30px 15px;
+        }
+
+        .tab-pane {
+            padding-top: 20px;
+        }
+
+        .user-message {
+            width: 50px;
+            height: 50px;
+        }
+        * {
+            box-sizing: border-box;
+        }
+
+        .row {
+            margin-left: -5px;
+            margin-right: -5px;
+            background-color: #f2f2f2;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 5px;
+        }
+
+        /* Clearfix (clear floats) */
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+            background-color: #f2f2f2;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 16px;
+        }
+
+        tr:nth-child(even) {
+            
+        }
+    </style>
+  

@@ -1,0 +1,105 @@
+﻿@using WebApplication1.ViewModels
+@{
+    //Layout = "_Layout";
+}
+@model List<CityVM>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Prikaz</title>
+</head>
+<body>
+    <input id="searchInput" type="search" class="light-table-filter" data-table="table" placeholder="Search...">
+    <table class="table" style="table-layout:fixed;">
+        <thead>
+            <tr>
+                <td>City Name</td>
+                <td>Country</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CityVM x in Model)
+            {
+                <tr>
+                    <td>@x.CityName</td>
+                    <td>@x.Country</td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a asp-controller="City" asp-action="UrediForma" asp-route-CityID="@x.CityID" class="btn btn-sm">Edit</a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
+<style>
+    thead {
+        border-bottom: 2px solid #343a40;
+        font-weight: 900;
+    }
+
+    #searchInput {
+        background-position: 10px 12px;
+        background-repeat: no-repeat;
+        width: 100%;
+        font-size: 16px;
+        padding: 12px 20px 12px 40px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+    }
+
+        #searchInput:focus {
+            outline: none;
+        }
+
+    .form-horizontal {
+        display: inline;
+    }
+</style>
+<script>
+    //Table filter
+    (function (document) {
+        'use strict';
+
+        var TableFilter = (function (Arr) {
+
+            var _input;
+
+            function _onInputEvent(e) {
+                _input = e.target;
+                var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+                Arr.forEach.call(tables, function (table) {
+                    Arr.forEach.call(table.tBodies, function (tbody) {
+                        Arr.forEach.call(tbody.rows, _filter);
+                    });
+                });
+            }
+
+            function _filter(row) {
+                var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
+                row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+            }
+
+            return {
+                init: function () {
+                    var inputs = document.getElementsByClassName('light-table-filter');
+                    Arr.forEach.call(inputs, function (input) {
+                        input.oninput = _onInputEvent;
+                    });
+                }
+            };
+        })(Array.prototype);
+
+        document.addEventListener('readystatechange', function () {
+            if (document.readyState === 'complete') {
+                TableFilter.init();
+            }
+        });
+
+    })(document);
+</script>

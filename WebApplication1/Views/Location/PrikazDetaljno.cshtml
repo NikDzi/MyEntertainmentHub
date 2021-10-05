@@ -1,0 +1,270 @@
+﻿@using WebApplication1.ViewModels
+@using ClassLibrary1.Model;
+@{
+//Layout = null;
+}
+@model LocationDetailVM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="https://maps.googleapis.com/maps/api/js?"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>PrikazDetaljno</title>
+</head>
+<body>
+    <div class="form-group">
+        <label>Location name: </label>
+        <span class="form-control" readonly>@Model.LocationName</span>
+    </div>
+    <div class="form-group">
+        <label>City: </label>
+        <span class="form-control" readonly>@Model.City</span>
+    </div>
+    <div class="form-group">
+        <label>Description: </label>
+        <span class="form-control overflow-auto" style="display:block; height:auto;" readonly>@Model.Description</span>
+    </div>
+    <h5>Media filmed here</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Media Name</td>
+                <td>Media Type</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (MediaLocationVM x in Model.MediaLocationStavke)
+            {
+                <tr>
+                    <td><a asp-controller="Media" asp-action="PrikazDetaljno" asp-route-MediaID="@x.MediaID">@x.MediaName</a></td>
+                    <td>@x.MediaType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div style="margin-bottom:15px;">
+        <h5>Image Gallery</h5>
+        <div id="window">
+            <div id="top_bar">
+                <div id="button">-</div>
+            </div>
+            <div style="border-style:solid;border-width:1px;border-color:lightgray; border-radius:3px; padding:5px" id="gallery">
+                @foreach (ImageVM x in Model.ImageList)
+                {
+                    //Modal
+                    <img class="modal_image" id="myImg" src="~/uploads/@x.ImageUniqueFilename" alt="@x.ImageCaption" style="width:15%;max-width:15%" />
+                }
+                <div id="myModal" class="modal">
+                    <span class="close">×</span>
+                    <img class="modal-content" id="img01">
+                    <div id="caption"></div>
+                </div>
+            </div>
+        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Image" asp-action="Create" asp-route-LocationID="@Model.LocationID" class="btn btn-primary" id="imgButton">Add Image</a>
+            <a asp-controller="Image" asp-action="PrikazZaBrisanje" asp-route-LocationID="@Model.LocationID" class="btn btn-primary" id="imgButton">Delete Image</a>
+        }
+    </div>
+    @if (Model.Latitude != null && Model.Longitude != null)
+    {
+        <div style="margin-top: 15px;">
+            <input type="button" value="Click to Display Map" onclick="DisplayGoogleMap()" class="btn btn-primary" id="gmButton"/>
+            <div id="myDiv" style="width:100%;height:400px;"></div>
+
+            <script type="text/javascript">
+                function DisplayGoogleMap() {
+
+                    //postavljanje latitude i longitude
+                    var myAddress = new google.maps.LatLng(@Model.Latitude, @Model.Longitude);
+                    //var myAddress = new google.maps.LatLng("43.3373","17.8150");
+
+                    //karakteristike mape
+                    var mapOptions = {
+                        center: myAddress,
+                        zoom: 15,
+                        minZoom: 15,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+
+                    //prikaz mape u divu sa postavljenim opcijama
+                    var map = new google.maps.Map(document.getElementById("myDiv"), mapOptions);
+
+                    //postavljanje markera na mapu
+                    var marker = new google.maps.Marker({
+                        position: myAddress,
+                        animation: google.maps.Animation.BOUNCE,
+                    });
+
+                    marker.setMap(map);
+                }
+            </script>
+        </div>
+    }
+</body>
+</html>
+<style>
+    thead {
+        border-bottom: 2px solid #343a40;
+        font-weight: 900;
+    }
+    #imgButton {
+        margin-top:10px;
+        background-color:#343a40;
+    }
+    #gmButton {
+        background-color:#343a40;
+    }
+    #window{
+    width:100%;
+    border:solid 1px;
+}
+
+#top_bar{
+    background: #FEFEFE;
+    height: 100%;
+    width: 100%;
+}
+#button{
+    border:solid 1px;
+    width: 25px;
+    height: 23px;
+    float:right;
+    cursor:pointer;
+}
+#gallery{
+    /*height: 250px;*/
+    background: #DFDFDF;
+    display:none
+}
+
+
+    #myImg {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        #myImg:hover {
+            opacity: 0.7;
+        }
+
+    /* The Modal (background) */
+
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1;
+        /* Sit on top */
+        padding-top: 100px;
+        /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.9);
+        /* Black w/ opacity */
+    }
+
+
+    /* Modal Content (image) */
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
+
+
+    /* Caption of Modal Image */
+
+    #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+
+
+   
+
+    /* The Close Button */
+
+    .close {
+        position: absolute;
+        top: 100px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+    /* 100% Image Width on Smaller Screens */
+
+    media only screen and (max-width: 700px) {
+        .modal-content
+
+    {
+        width: 100%;
+    }
+
+    }
+</style>
+<script>
+    var modal = document.getElementById('myModal');
+
+    // Uzimanje slike i stavljanje u modal
+    var img = document.getElementsByClassName('modal_image');
+    for (var i = 0; i < img.length; i++) {
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        img[i].addEventListener('click', function () {
+            modal.style.display = "block";
+            modalImg.src = this.src;
+            captionText.innerHTML = this.alt;
+        })
+    }
+
+    // span koji zatvara modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // klik na span zatvara modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    //slideToggle za image gallery
+    $("#button").click(function(){
+    if($(this).html() == "-"){
+        $(this).html("+");
+    }
+    else{
+        $(this).html("-");
+    }
+        $("#gallery").slideToggle('1','linear');
+    });
+</script>

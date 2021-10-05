@@ -1,0 +1,162 @@
+﻿
+@{
+    //Layout = null;
+}
+@model WebApplication1.ViewModels.AddMediaVM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DodajForma</title>
+    <script src="~/lib/bootstrap-select-1.13.14/dist/js/bootstrap-select.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap-select-1.13.14/dist/css/bootstrap-select.css" />
+</head>
+<body>
+    <form action="/Media/SnimiForma" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="MediaID" style="display: none" />
+        <div class="form-group">
+            <label>Media Name</label>
+            <input class="form-control" asp-for="MediaName" />
+            <span asp-validation-for="MediaName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Description</label><br />
+            @Html.TextAreaFor(model => model.Description, new { style = "resize: none;", @class = "form-control", @rows = 8, @cols = 70 })
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Release Date</label>
+            <input type="date" class="form-control" asp-for="ReleaseDate"/>
+            <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Episode Length</label>
+            <input class="form-control" asp-for="EpisodeLength" />
+            <span asp-validation-for="EpisodeLength" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Episode Count</label>
+            <input class="form-control" asp-for="EpisodeCount" />
+            <span asp-validation-for="EpisodeCount" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Budget</label>
+            <input class="form-control" asp-for="Budget" />
+            <span asp-validation-for="Budget" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Earnings</label>
+            <input class="form-control" asp-for="Earnings" />
+            <span asp-validation-for="Earnings" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Media Type</label>
+            <select class="form-control" asp-for="MediaTypeID" asp-items="Model.MediaTypeStavke">
+                <option></option>
+            </select>
+            <span asp-validation-for="MediaTypeID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Media Genre</label><br />
+            @*<select class="form-control" asp-for="ListOfGenres" asp-items="Model.GenreStavke"></select>*@
+            <div class="jumbotron">
+                @for (int i = 0; i < Model.GenreStavke.Count(); i++)
+                {
+                    var x = Model.GenreStavke[i];
+                    <input asp-for="GenreStavke[i]" value="@x" hidden />
+                    <input asp-for="GenreStavke[i].ID" value="@x.ID" hidden />
+                    <input asp-for="GenreStavke[i].Name" value="@x.Name" hidden />
+
+                    @*<label>@x.Name</label>
+                    @Html.CheckBoxFor(j => j.GenreStavke[i].IsChecked)<br />*@
+                    <div style="float:left; margin-left:40px; margin-top:10px;position:relative;bottom:39px">
+                        <label>@x.Name</label>
+                        @Html.CheckBoxFor(j => j.GenreStavke[i].IsChecked)
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="form-group" style="clear:left;">
+            <label>Country</label>
+            <select class="form-control" asp-for="CountryID" asp-items="Model.CountryStavke" id="selectCountry">
+                <option></option>
+            </select>
+            <span asp-validation-for="CountryID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Language</label>
+            <select class="form-control" asp-for="LanguageID" asp-items="Model.LanguageStavke" id="selectLanguage">
+                <option></option>
+            </select>
+            <span asp-validation-for="LanguageID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Rating</label>
+            <select class="form-control" asp-for="RatingID" asp-items="Model.RatingStavke">
+                <option></option>
+            </select>
+            <span asp-validation-for="RatingID" class="text-danger"></span>
+        </div>
+        @if (Model.MediaID == 0)
+        {
+            <div>
+                <div class="form-group">
+                    <label clear:right;>Involved Companies</label>
+                    <select multiple class="selectpicker form-control" asp-for="ListOfCompanies" asp-items="Model.CompanyStavke" id="selectComp" data-live-search="true" data-style=""></select>
+                </div>
+                <div class="form-group">
+                    <label clear:right;>Notable Filming Locations</label>
+                    <select multiple class="selectpicker form-control" asp-for="ListOfLocations" asp-items="Model.LocationStavke" id="selectLoc" data-live-search="true" data-style=""></select>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div></div>
+        }
+        <input type="submit" class="btn btn-primary" id="submitButton" />
+    </form>
+</body>
+</html>
+<style>
+    #submitButton {
+        background-color: #343a40;
+    }
+</style>
+<script>
+    $(function () {
+        var select = $('#selectCountry');
+        select.html(select.find('option').sort(function (x, y) {
+            // to change to descending order switch "<" for ">"
+            return $(x).text() > $(y).text() ? 1 : -1;
+        }));
+    });
+    
+    $(function () {
+        var select = $('#selectLanguage');
+        select.html(select.find('option').sort(function (x, y) {
+            // to change to descending order switch "<" for ">"
+            return $(x).text() > $(y).text() ? 1 : -1;
+        }));
+    });
+    
+    $(function () {
+        var select = $('#selectComp');
+        select.html(select.find('option').sort(function (x, y) {
+            // to change to descending order switch "<" for ">"
+            return $(x).text() > $(y).text() ? 1 : -1;
+        }));
+    });
+        
+    $(function () {
+        var select = $('#selectLoc');
+        select.html(select.find('option').sort(function (x, y) {
+            // to change to descending order switch "<" for ">"
+            return $(x).text() > $(y).text() ? 1 : -1;
+        }));
+    });
+</script>

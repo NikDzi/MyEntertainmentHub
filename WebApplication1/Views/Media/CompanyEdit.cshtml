@@ -1,0 +1,57 @@
+﻿@using WebApplication1.ViewModels
+@{
+    //Layout = null;
+}
+@model AddMediaCompanyVM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CompanyEdit</title>
+</head>
+<body>
+    <a class="btn btn-primary" asp-controller="Media" asp-action="PrikazDetaljno" asp-route-MediaID="@Model.MediaID" id="bsBtn">Go back</a>
+    <form asp-controller="Media" asp-action="SnimiCompanyEdit">
+        @Html.AntiForgeryToken()
+        <input asp-for="MediaID" value="@Model.MediaID" hidden />
+        <div class="form-group">
+            <label asp-for="MediaName" class="control-label">Media: </label>
+            <input asp-for="MediaName" class="form-control" readonly />
+        </div>
+        <div class="form-group">
+            <label>Company: </label>
+            <select asp-for="CompanyID" asp-items="@Model.CompanyStavke" class="form-control"></select>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" id="submitBtn" />
+        </div>
+    </form>
+    <h5>Companies: </h5>
+    <div id="CompanyDiv">
+
+    </div>
+</body>
+</html>
+<style>
+    #submitBtn {
+        background-color:#343a40;
+    }
+    #bsBtn {
+        background-color:#343a40;
+        margin-bottom:20px;
+    }
+</style>
+<script>
+        $.get("/Media/CompanyTable?MediaID=@Model.MediaID", function (result) {
+            $("#CompanyDiv").html(result);
+        });
+
+        $(function() {
+          var select = $('select');
+          select.html(select.find('option').sort(function(x, y) {
+            // to change to descending order switch "<" for ">"
+            return $(x).text() > $(y).text() ? 1 : -1;
+          }));
+        });
+</script>

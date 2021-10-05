@@ -1,0 +1,80 @@
+﻿@model WebApplication1.ViewModels.TechnicalSpecificationsVM
+
+@{
+    ViewData["Title"] = "DodajForma";
+}
+
+<h1>DodajForma</h1>
+
+<h4>TechnicalSpecifications</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form action="/TechnicalSpecifications/SnimiForma" method="post">
+            @Html.AntiForgeryToken();
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AspectRatio" class="control-label"></label>
+                <input asp-for="AspectRatio" class="form-control"/>
+                <span asp-validation-for="AspectRatio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera" class="control-label"></label>
+                <input asp-for="Camera" class="form-control"/>
+                <span asp-validation-for="Camera" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Laboratory" class="control-label"></label>
+                <input asp-for="Laboratory" class="form-control"/>
+                <span asp-validation-for="Laboratory" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NegativeFormat" class="control-label"></label>
+                <input asp-for="NegativeFormat" class="form-control"/>
+                <span asp-validation-for="NegativeFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CinematographicProcess" class="control-label"></label>
+                <input asp-for="CinematographicProcess" class="form-control"/>
+                <span asp-validation-for="CinematographicProcess" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PrintedFilmFormat" class="control-label"></label>
+                <input asp-for="PrintedFilmFormat" class="form-control"/>
+                <span asp-validation-for="PrintedFilmFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ColorID" class="control-label"></label>
+                <select asp-for="ColorID" class="form-control" asp-items="Model.ColorStavke"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SoundComposer" class="control-label"></label>
+                <input asp-for="SoundComposer" class="form-control"/>
+                <span asp-validation-for="SoundComposer" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="display: none">
+                <label asp-for="MediaID" class="control-label"></label>
+                <input asp-for="MediaID" class="form-control" readonly/>
+            </div>
+            <div class="form-group" style="display: none">
+                <label asp-for="TechnicalSpecificationsID" class="control-label"></label>
+                <input asp-for="TechnicalSpecificationsID" class="form-control" readonly/>
+            </div>
+            <div class="form-group" style="display: none">
+                <label asp-for="SoundMixID" class="control-label"></label>
+                <input asp-for="SoundMixID" class="form-control" readonly/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/Media/Prikaz">Back to list</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

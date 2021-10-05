@@ -1,0 +1,75 @@
+﻿@using WebApplication1.ViewModels;
+@model WebApplication1.ViewModels.TechnicalSpecificationsVM
+
+@{
+    ViewData["Title"] = "ViewSpecs";
+}
+
+<h1>ViewSpecs</h1>
+
+<div class="form-group">
+    <h4>TechnicalSpecifications</h4>
+    <hr />
+    <dl class="form-group">
+        <dt class="form-group">
+            @Html.DisplayNameFor(model => model.AspectRatio)
+        </dt>
+        <dd class="form-group">
+            @Html.DisplayFor(model => model.AspectRatio)
+        </dd>
+        <dt class="form-group">
+            @Html.DisplayNameFor(model => model.Camera)
+        </dt>
+        <dd class="form-group">
+            @Html.DisplayFor(model => model.Camera)
+        </dd>
+        <dt class="form-group">
+            @Html.DisplayNameFor(model => model.Laboratory)
+        </dt>
+        <dd class="form-group">
+            @Html.DisplayFor(model => model.Laboratory)
+        </dd>
+        <dt class="form-group">
+            @Html.DisplayNameFor(model => model.NegativeFormat)
+        </dt>
+        <dd class="form-group">
+            @Html.DisplayFor(model => model.NegativeFormat)
+        </dd>
+        <dt class="form-group">
+            @Html.DisplayNameFor(model => model.CinematographicProcess)
+        </dt>
+        <dd class="form-group">
+            @Html.DisplayFor(model => model.CinematographicProcess)
+        </dd>
+        <dt class="form-group">
+            @Html.DisplayNameFor(model => model.PrintedFilmFormat)
+        </dt>
+        <dd class="form-group">
+            @Html.DisplayFor(model => model.PrintedFilmFormat)
+        </dd>
+        <dt class="form-group">
+            @Html.DisplayNameFor(model => model.Color)
+        </dt>
+        <dd class="form-group">
+            @Html.DisplayFor(model => model.Color.ColorName)
+        </dd>
+        <dt class="form-group">
+            OST Composer @Html.DisplayNameFor(model => model.SoundMix.Name)
+        </dt>
+        <dd class="form-group">
+            @Html.DisplayFor(model => model.SoundMix.Name)
+        </dd>
+        <dt class="form-group" style="display:none">
+            @Html.DisplayNameFor(model => model.MediaID)
+        </dt>
+        <dd class="form-group" style="display:none">
+            @Html.DisplayFor(model => model.MediaID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="/Media/Prikaz">Back to list</a>
+    <a asp-controller="TechnicalSpecifications" asp-action="Delete" asp-route-TechnicalSpecificationsID="@Model.TechnicalSpecificationsID">Delete</a>
+    <a asp-controller="TechnicalSpecifications" asp-action="Edit" asp-route-TechnicalSpecificationsID="@Model.TechnicalSpecificationsID">Edit</a>
+</div>
+

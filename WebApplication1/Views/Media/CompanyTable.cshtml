@@ -1,0 +1,40 @@
+﻿@using WebApplication1.ViewModels
+
+@{
+    Layout = null;
+}
+@model MediaDetailVM
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Company</td>
+            <td>Work</td>
+            <td>Option</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (CompanyVM x in Model.CompanyStavke)
+        {
+            <tr>
+                <td><a asp-controller="Company" asp-action="PrikazDetaljno" asp-route-CompanyID="@x.CompanyID">@x.CompanyName</a></td>
+                <td>@x.CompanyType</td>
+                @*<td><a asp-controller="Media" asp-action="BrisanjeCompany" asp-route-MediaCompanyID="@x.MediaCompanyID">Delete</a></td>*@
+                <td>
+                    @using (Html.BeginForm("BrisanjeCompany", "Media", new { MediaCompanyID = x.MediaCompanyID }, FormMethod.Post, null, htmlAttributes: new { @class = "form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm">Delete</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    thead {
+        border-bottom: 2px solid #343a40;
+        font-weight: 900;
+    }
+</style>

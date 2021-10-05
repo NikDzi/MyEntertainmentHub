@@ -1,0 +1,16 @@
+﻿@using WebApplication1.ViewModels
+
+@model AddCommentVM
+
+<div>
+    <form asp-controller="Comments" asp-action="AddComment" method="post">
+        <input asp-for="MediaID" type="hidden" />
+        <input asp-for="UserID" type="hidden" />
+        <input id="commentinput" asp-for="CommentContent"  />
+        <button type="submit" id="commentbutton"> Comment </button>
+
+    </form>
+</div>
+
+<script src="lib/signalr.js"></script>
+<script src="js/site.js"></script>

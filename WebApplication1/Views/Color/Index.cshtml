@@ -1,0 +1,22 @@
+﻿@using ClassLibrary1.Model
+@model List<Color>
+@{
+}
+<h3>
+    <a asp-controller="Color" asp-action="DodajForma">Add another color standard</a>
+</h3>
+<div class="form-group">
+    <table>
+        @foreach (var x in Model)
+        {
+            <tr class="form-group">
+                <td class="form-group">
+                    <label class="form-group">Color Standard:</label>
+                    <span class="form-group"> @x.ColorName</span>
+                    <a asp-controller="Color" asp-action="Edit" asp-route-ColorID="@x.ColorID">Edit</a>
+                </td>
+            </tr>
+        }
+    </table>
+   
+</div>

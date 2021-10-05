@@ -1,0 +1,25 @@
+﻿@using WebApplication1.ViewModels;
+@{
+}
+@model ImageVM
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body style="align-content:center">
+    <form asp-action="Addpfp" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input asp-for="UserID" value="@Model.UserID" hidden />
+        <input class="form-control" asp-for="ImageCaption" value="profilnaslika" hidden/><br />
+        <input class="form-control" asp-for="ImageDescription" value="profilnaslika" hidden/><br />
+
+        <div class="form-group">
+            <label> please select an image</label><br/>
+            <input asp-for="MyImage"/><br/>
+        </div>
+
+        <input type="submit" />
+    </form>
+</body>
+</html>

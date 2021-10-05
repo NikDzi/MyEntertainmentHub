@@ -1,0 +1,59 @@
+﻿
+@{
+    //Layout = "_Layout";
+}
+@model WebApplication1.ViewModels.AddCompanyVM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DodajForma</title>
+</head>
+<body>
+    <form action="/Company/SnimiForma" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="CompanyID" style="display: none" />
+
+        <div class="form-group">
+            <label>Company Name</label>
+            <input class="form-control" asp-for="CompanyName" />
+            <span asp-validation-for="CompanyName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Company Type</label>
+            <select class="form-control" asp-for="CompanyTypeID" asp-items="Model.CompanyTypeStavke">
+                <option></option>
+            </select>
+            <span asp-validation-for="CompanyTypeID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>City</label>
+            <select class="form-control" asp-for="CityID" asp-items="Model.CityStavke" id="citySelect">
+                <option></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Description</label><br />
+            @Html.TextAreaFor(model => model.Description, new { style = "resize: none;", @class = "form-control", @rows = 8, @cols = 70 })
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <input type="submit" class="btn btn-primary" id="submitButton" />
+    </form>
+</body>
+</html>
+<style>
+    #submitButton {
+        background-color: #343a40;
+    }
+</style>
+<script>
+        $(function() {
+      var select = $('#citySelect');
+      select.html(select.find('option').sort(function(x, y) {
+        // to change to descending order switch "<" for ">"
+        return $(x).text() > $(y).text() ? 1 : -1;
+      }));
+    });
+</script>

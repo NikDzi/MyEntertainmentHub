@@ -1,0 +1,73 @@
+﻿
+@using ClassLibrary1.Model;
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "DodajForma";
+    ViewData["mediaid"] = TempData["mediaID"];
+
+}
+@model WebApplication1.ViewModels.AddMistakeVM;
+@inject UserManager<AppUser> UserManager
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DodajForma</title>
+</head>
+<body>
+    @if (UserManager.GetUserId(User) != null)
+    {
+        Model.UserID = UserManager.GetUserId(User);
+
+    }
+    @*@{@Model.Identitytestvalue=UserManager.GetUserId(User);}*@
+<form action="/Mistake/SnimiForma?=@Model" method="post" style="margin-bottom: 25px; border: 5px solid red;">
+    @Html.AntiForgeryToken()
+
+    <input asp-for="@Model.Media" style="display: none" readonly/>
+    <input asp-for="@Model.Media.MediaID" value="@Model.MediaID" style="display: none" readonly/>
+    <div class="form-group">
+        <label>Media name </label>
+        <input value="@Model.Media.MediaName" asp-for="@Model.Media.MediaName" disabled/>
+
+        @*<select class="form-control" asp-for="@Model.Media.MediaID" asp-items="Model.MistakeTicketMediaType">
+                <option style="display: inline" disabled="disabled">Choose media </option>
+            </select>*@
+    </div>
+    <input asp-for="MistakeTicketID" style="display: none"/>
+    <div class="form-group">
+        <label>Mistake location </label>
+        <select class="form-control" asp-for="MistakeTicketTypeID" asp-items="Model.MistakeTicketTypeStavke">
+            <option disabled="disabled">Choose location</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Description</label><br/>
+        @Html.TextAreaFor(model => model.Description, new {style = "resize: none;", @class = "form-control", @rows = 8, @cols = 70, @minlength=10, @required="true"})
+    </div>
+    <div style="display: none">
+        <select asp-for="@Model.UserID">
+            <option value="@UserManager.GetUserId(User)"></option>
+        </select>
+    </div>
+    <input onclick="collapse()" id="submitbutton" type="submit"/>
+</form>
+    <script>
+        function collapse() {
+
+            $.setTimeout(function () {
+                $.get("/Mistake/DodajPoruka",
+                    function (odgovor) {
+                        $("#ReportDiv").html(odgovor);
+
+
+                    });
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,48 @@
+﻿@using WebApplication1.ViewModels
+@{
+    ViewData["Title"] = "Index";
+}
+@model List<AddMistakeVM>
+    <title>Mistakes</title>
+<table class="table" style="table-layout:fixed;">
+    <thead>
+        <tr>
+            <td>Reported media</td>
+            <td>Reporter</td>
+            <td>Mistake Location</td>
+            <td>Date</td>
+            <td>Description</td>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>Option</td>
+            }
+        </tr>
+    </thead>  
+    <tbody>
+        @foreach (AddMistakeVM x in Model)
+        {
+        <tr>
+            <td>
+                <a asp-controller="Media" asp-action="PrikazDetaljno" asp-route-MediaID="@x.MediaID">
+                    @x.Media.MediaName
+
+                </a>
+            </td>
+            <td><a id="manage" asp-controller="User" asp-action="ViewProfile" asp-route-UserID="@x.UserID">@x.User.UserName</a></td>
+            <td><a asp-controller="Media" asp-action="PrikazDetaljno" asp-route-MediaID="@x.MediaID"> @x.Identitytestvalue </a></td>
+            <td> @x.DateOfCreation.ToString("yyyy-dd-MM")</td>
+            <td> @x.Description</td>
+            @if (User.IsInRole("Admin"))
+        {
+            <td>
+                @using (Html.BeginForm("Brisanje", "Mistake", new { MistakeTicketID = x.MistakeTicketID }, FormMethod.Post, null, htmlAttributes: new { @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-sm">Delete</button>
+                }
+            </td>
+        }
+        </tr>
+        }
+    </tbody>
+</table>

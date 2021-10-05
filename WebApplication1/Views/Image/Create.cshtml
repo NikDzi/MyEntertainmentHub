@@ -1,0 +1,49 @@
+﻿@using WebApplication1.ViewModels
+@{
+    //Layout = null;
+}
+@model ImageVM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body>
+    <form asp-action="Create" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input asp-for="LocationID" value="@Model.LocationID" hidden />
+        <input asp-for="CompanyID" value="@Model.CompanyID" hidden />
+        <input asp-for="PersonID" value="@Model.PersonID" hidden />
+        <input asp-for="MediaID" value="@Model.MediaID" hidden />
+        <input asp-for="CharacterID" value="@Model.CharacterID" hidden />
+        <div class="form-group">
+            <label>Image caption</label>
+            <input class="form-control" asp-for="ImageCaption" /><br />
+        </div>
+        <div class="form-group">
+            <lable>Image description</lable>
+            <input class="form-control" asp-for="ImageDescription" /><br />
+        </div>
+        <div class="form-group">
+            @if (Model.Thumbnail == true)
+            {
+                <label>Thumbnail </label>
+                <span style="color:red; font-size=4px">(Record already has a thumbnail!)</span>
+                <input type="checkbox" disabled />
+            }
+            else
+            {
+                <label>Thumbnail</label>
+                <input asp-for="Thumbnail" type="checkbox" />
+            }
+        </div>
+        <div class="form-group">
+            <input asp-for="MyImage" /><br />
+        </div>
+
+        <input type="submit" />
+    </form>
+</body>
+</html>

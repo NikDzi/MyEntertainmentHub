@@ -1,0 +1,46 @@
+﻿@using WebApplication1.ViewModels;
+@{
+}
+@model List<AddCommentVM>
+    <title>Comment Reports</title>
+
+    <table class="table" style="table-layout:fixed;">
+        <thead>
+            <tr>
+                <td>Reported user</td>
+                <td>Number of reports</td>
+                <td>Date of comment</td>
+                <td>Comment</td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>Option</td>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (AddCommentVM x in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="User" asp-action="ViewProfile" asp-route-UserID="@x.UserID">
+                            @x.User.UserName
+
+                        </a>
+                    </td>
+                    <td style="text-align:center;"> @x.Reports</td>
+                    <td> @x.DateOfCreation.ToString("yyyy-dd-MM")</td>
+                    <td> @x.CommentContent</td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            @using (Html.BeginForm("Delete", "Comments", new { CommentID = x.CommentID }, FormMethod.Post, null, htmlAttributes: new { @class = "form-horizontal" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm">Delete</button>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>

@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20201212172916_NewInitialMigration.cs" />
+    <Compile Remove="Migrations\20201212172916_NewInitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20201220135743_migThumbnail.cs" />
+    <Compile Remove="Migrations\20201220135743_migThumbnail.Designer.cs" />
+    <Compile Remove="Migrations\20201226152825_migLatitudeLongitude.cs" />
+    <Compile Remove="Migrations\20201226152825_migLatitudeLongitude.Designer.cs" />
+    <Compile Remove="Migrations\20210118235918_listmedia.cs" />
+    <Compile Remove="Migrations\20210118235918_listmedia.Designer.cs" />
+    <Compile Remove="Migrations\20210119011733_updatezaimage.cs" />
+    <Compile Remove="Migrations\20210119011733_updatezaimage.Designer.cs" />
+    <Compile Remove="Migrations\20210120003228_user_na_Watchlist.cs" />
+    <Compile Remove="Migrations\20210120003228_user_na_Watchlist.Designer.cs" />
+    <Compile Remove="Migrations\20210120015751_removed.cs" />
+    <Compile Remove="Migrations\20210120015751_removed.Designer.cs" />
+    <Compile Remove="Migrations\20210120022122_watchstatus.cs" />
+    <Compile Remove="Migrations\20210120022122_watchstatus.Designer.cs" />
+    <Compile Remove="Migrations\20210124005236_specsmedia.cs" />
+    <Compile Remove="Migrations\20210124005236_specsmedia.Designer.cs" />
+    <Compile Remove="Migrations\20210314220655_lesson.cs" />
+    <Compile Remove="Migrations\20210314220655_lesson.Designer.cs" />
+    <Compile Remove="Migrations\20210314223236_initial.cs" />
+    <Compile Remove="Migrations\20210314223236_initial.Designer.cs" />
+    <Compile Remove="Model\WatchList.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

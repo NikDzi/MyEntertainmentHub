@@ -1,0 +1,67 @@
+﻿@using WebApplication1.ViewModels
+@{
+}
+@model List<ImageVM>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PrikazZaBrisanje</title>
+</head>
+<body>
+    <table class="table" style="table-layout:fixed;">
+        <thead>
+            <tr>
+                <td>Image</td>
+                <td>Caption</td>
+                <td>Description</td>
+                <td>Action</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @foreach (var x in Model)
+                {
+                    if (x.Thumbnail == true)
+                    {
+                        <td>
+                            <img class="modal_image" id="myImg" src="~/uploads/@x.ImageUniqueFilename" alt="@x.ImageCaption" style="width:30%;max-width:30%" /><br />
+                            <span style="color:red">Thumbnail</span>
+                        </td>
+                        <td>@x.ImageCaption</td>
+                        <td>@x.ImageDescription</td>
+                        @*<td><a asp-controller="Image" asp-action="Brisanje" asp-route-ImageID="@x.ImageID" class="btn btn-default">Delete</a></td>*@
+                        <td>
+                            @using (Html.BeginForm("Brisanje", "Image", new { ImageID = x.ImageID }, FormMethod.Post, null, htmlAttributes: new { @class = "form-horizontal" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm">Delete</button>
+                            }
+                        </td>
+                    }
+                }
+            </tr>
+            @foreach (var x in Model)
+            {
+                if (x.Thumbnail == false)
+                {
+                    <tr>
+                        <td><img class="modal_image" id="myImg" src="~/uploads/@x.ImageUniqueFilename" alt="@x.ImageCaption" style="width:30%;max-width:30%" /></td>
+                        <td>@x.ImageCaption</td>
+                        <td>@x.ImageDescription</td>
+                        @*<td><a asp-controller="Image" asp-action="Brisanje" asp-route-ImageID="@x.ImageID" class="btn btn-default">Delete</a></td>*@
+                        <td>
+                            @using (Html.BeginForm("Brisanje", "Image", new { ImageID = x.ImageID }, FormMethod.Post, null, htmlAttributes: new { @class = "form-horizontal" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</body>
+</html>

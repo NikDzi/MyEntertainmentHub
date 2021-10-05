@@ -1,0 +1,40 @@
+﻿@using WebApplication1.ViewModels
+
+@{
+    Layout = null;
+}
+@model MediaDetailVM
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Person</td>
+            <td>Role</td>
+            <td>Option</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (CrewPersonVM x in Model.CrewStavke)
+        {
+            <tr>
+                <td>@x.PersonFirstName @x.PersonLastName</td>
+                <td>@x.OccupationName</td>
+                @*<td><a href="/Media/BrisanjeCrew?CrewPersonID=@x.CrewPersonID">Delete</a></td>*@
+                <td>
+                    @using (Html.BeginForm("BrisanjeCrew", "Media", new { CrewPersonID = x.CrewPersonID }, FormMethod.Post, null, htmlAttributes: new { @class = "form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm">Delete</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    thead {
+        border-bottom: 2px solid #343a40;
+        font-weight: 900;
+    }
+</style>

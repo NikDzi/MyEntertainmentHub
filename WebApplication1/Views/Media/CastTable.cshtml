@@ -1,0 +1,40 @@
+﻿@using WebApplication1.ViewModels
+
+@{
+    Layout = null;
+}
+@model MediaDetailVM
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Character</td>
+            <td>Actor</td>
+            <td>Option</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (CastPersonVM x in Model.CastStavke)
+        {
+            <tr>
+                <td><a href="/Character/PrikazDetaljno?CharacterID=@x.CharacterID">@x.CharacterFirstName @x.CharacterLastName</a></td>
+                <td><a href="/Person/PrikazDetaljno?PersonID=@x.PersonID">@x.PersonFirstName @x.PersonLastName</a></td>
+                @*<td><a href="/Media/BrisanjeCast?CastPersonID=@x.CastPersonID">Delete</a></td>*@
+                <td>
+                    @using (Html.BeginForm("BrisanjeCast", "Media", new { CastPersonID = x.CastPersonID }, FormMethod.Post, null, htmlAttributes: new { @class = "form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm">Delete</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    thead {
+        border-bottom: 2px solid #343a40;
+        font-weight:900;
+    }
+</style>

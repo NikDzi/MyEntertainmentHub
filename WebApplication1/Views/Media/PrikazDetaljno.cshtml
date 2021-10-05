@@ -1,0 +1,674 @@
+﻿
+@using WebApplication1.ViewModels
+@using ClassLibrary1.Model
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.SignalR;
+@using Microsoft.CodeAnalysis
+
+
+@{
+    Layout = "_Layout";
+    var reportirao = false;
+    int ajaxid = 0;
+    bool isadmin = false;
+}
+@model MediaDetailVM
+@{ViewData["data"] = Model.MediaName;}
+@inject UserManager<AppUser> UserManager
+
+@if (User.IsInRole("Admin"))
+{
+    isadmin = true;
+}
+<!DOCTYPE html>
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PrikazDetaljno</title>
+
+</head>
+<body>
+<div id="prvidiv">
+
+</div>
+<div class="form-group">
+    <label>Title: </label>
+    @if (UserManager.GetUserId(User) != null)
+    {
+        <button class="btn btn-danger" id="mistakebutton" style="width: 2px; height: 30px; padding-right: 0px; padding-left: 0px; padding-bottom: 0px; border-right-width: 15px; border-left-width: 10px; border-bottom-width: 1px; padding-top: 0px; margin-left: 80%; margin-bottom: 7px;">
+            !
+        </button>
+    }
+   
+    <div id="ReportDiv" class="tile" style="display: none;"></div>
+    <span class="form-control" readonly>@Model.MediaName</span>
+</div>
+<div class="form-group">
+    <label>Media type:</label>
+    <span class="form-control" readonly>@Model.MediaType</span>
+</div>
+<div class="form-group">
+    <label>Genres:</label>
+    <br/>
+    <span class="form-control" readonly>
+        @foreach (Genre x in Model.GenreStavke)
+        {
+            @x.GenreName
+            <text>&nbsp;</text>
+        }
+    </span>
+</div>
+<div class="form-group">
+    <label>Description:</label>
+    <span class="form-control overflow-auto" style="display: block; height: auto;" readonly>@Model.Description</span>
+</div>
+<div class="form-group">
+    <label>Release date:</label>
+    <span class="form-control" readonly>@Model.ReleaseDate</span>
+</div>
+<div class="form-group">
+    <label>Length:</label>
+    <span class="form-control" readonly>@Model.EpisodeLength</span>
+</div>
+<div class="form-group">
+    <label>Episodes:</label>
+    <span class="form-control" readonly>@Model.EpisodeCount</span>
+</div>
+<div class="form-group">
+    <label>Country of origin:</label>
+    <span class="form-control" readonly>@Model.Country</span>
+</div>
+<div class="form-group">
+    <label>Language:</label>
+    <span class="form-control" readonly>@Model.Language</span>
+</div>
+<div class="form-group">
+    <label>Rating:</label>
+    <span class="form-control" readonly>@Model.Rating</span>
+</div>
+@if (Model.TechnicalSpecifications.SoundMix != null)
+{
+    <a asp-controller="TechnicalSpecifications" asp-action="ViewSpecs" asp-route-MediaID="@Model.MediaID">See technical specifications...</a>
+
+}
+else
+{
+    <a asp-controller="TechnicalSpecifications" asp-action="DodajForma" asp-route-MediaID="@Model.MediaID">Add technical specifications...</a>
+
+}
+<div style="width: 50%; float: left;">
+    <h5>Crew roles</h5>
+</div>
+@if (User.IsInRole("Admin"))
+{
+    <div style="width: 50%; float: right;">
+        <a asp-controller="Media" asp-action="CrewEdit" asp-route-MediaID="@Model.MediaID" class="btn-sm btn-primary" id="editButton">Edit</a>
+    </div>
+}
+<table class="table" style="table-layout: fixed;">
+    <thead>
+    <tr>
+        <td>Person</td>
+        <td>Role</td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (CrewPersonVM x in Model.CrewStavke)
+    {
+        <tr>
+            <td>
+                <a asp-controller="Person" asp-action="PrikazDetaljno" asp-route-PersonID="@x.PersonID">@x.PersonFirstName @x.PersonLastName</a>
+            </td>
+            <td>@x.OccupationName</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div style="width: 50%; float: left;">
+    <h5>Cast roles</h5>
+</div>
+@if (User.IsInRole("Admin"))
+{
+    <div style="width: 50%; float: right;">
+        <a asp-controller="Media" asp-action="CastEdit" asp-route-MediaID="@Model.MediaID" class="btn-sm btn-primary" id="editButton">Edit</a>
+    </div>
+}
+<table class="table" style="table-layout: fixed;">
+    <thead>
+    <tr>
+        <td>Character</td>
+        <td>Person</td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (CastPersonVM x in Model.CastStavke)
+    {
+        <tr>
+            <td>
+                <a asp-controller="Character" asp-action="PrikazDetaljno" asp-route-CharacterID="@x.CharacterID">@x.CharacterFirstName @x.CharacterLastName</a>
+            </td>
+            <td>
+                <a asp-controller="Person" asp-action="PrikazDetaljno" asp-route-PersonID="@x.PersonID">@x.PersonFirstName @x.PersonLastName</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div style="width: 50%; float: left;">
+    <h5>Involved companies</h5>
+</div>
+<div style="display: none">
+    <select asp-for="@Model.MediaName">
+        <option value="@Model.MediaName"></option>
+    </select>
+</div>
+@if (User.IsInRole("Admin"))
+{
+    <div style="width: 50%; float: right;">
+        <a asp-controller="Media" asp-action="CompanyEdit" asp-route-MediaID="@Model.MediaID" class="btn-sm btn-primary" id="editButton">Edit</a>
+    </div>
+}
+<table class="table" style="table-layout: fixed;">
+    <thead>
+    <tr>
+        <td>Company</td>
+        <td>Work</td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (CompanyVM x in Model.CompanyStavke)
+    {
+        <tr>
+            <td>
+                <a asp-controller="Company" asp-action="PrikazDetaljno" asp-route-CompanyID="@x.CompanyID">@x.CompanyName</a>
+            </td>
+            <td>@x.CompanyType</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div style="width: 50%; float: left;">
+    <h5>Notable filming locations</h5>
+</div>
+@if (User.IsInRole("Admin"))
+{
+    <div style="width: 50%; float: right;">
+        <a asp-controller="Media" asp-action="LocationEdit" asp-route-MediaID="@Model.MediaID" class="btn-sm btn-primary" id="editButton">Edit</a>
+    </div>
+}
+<table class="table" style="table-layout: fixed;" >
+    <thead>
+    <tr>
+        <td>Location</td>
+        <td>City</td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (LocationVM x in Model.LocationStavke)
+    {
+        <tr>
+            <td>
+                <a asp-controller="Location" asp-action="PrikazDetaljno" asp-route-LocationID="@x.LocationID">@x.LocationName</a>
+            </td>
+            <td>@x.CityName</td>
+        </tr>
+    }
+    </tbody>
+</table>
+@if (Model.composer != null)
+{
+    <div style="width: 100%; float: left;">
+        <h5>OST Composer</h5>
+    </div>
+
+    <h3 style="margin-bottom: 25px">@Model.composer </h3>
+
+}
+
+<div style="margin-bottom: 15px;">
+    <h5>Image Gallery</h5>
+    <div id="window">
+        <div id="top_bar">
+            <div id="button">-</div>
+        </div>
+        <div style="border-style: solid; border-width: 1px; border-color: lightgray; border-radius: 3px; padding: 5px" id="gallery">
+            @foreach (ImageVM x in Model.ImageList)
+            {
+                //Modal
+                <img class="modal_image" id="myImg" src="~/uploads/@x.ImageUniqueFilename" alt="@x.ImageCaption" style="width: 15%; max-width: 15%"/>
+            }
+            <div id="myModal" class="modal">
+                <span class="close">×</span>
+                <img class="modal-content" id="img01">
+                <div id="caption"></div>
+            </div>
+        </div>
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Image" asp-action="Create" asp-route-MediaID="@Model.MediaID" class="btn btn-primary" id="imgButton">Add Image</a>
+        <a asp-controller="Image" asp-action="PrikazZaBrisanje" asp-route-MediaID="@Model.MediaID" class="btn btn-primary" id="imgButton">Delete Image</a>
+    }
+</div>
+
+@if (UserManager.GetUserId(User) != null)
+{
+    <div style="width: 100%; height: 20px;">
+        @{
+            await Html.RenderPartialAsync("Comments/DodajForma", new AddCommentVM {MediaID = Model.MediaID, UserID = UserManager.GetUserId(User)});
+
+        }
+
+    </div>
+}
+
+<div>
+    <table class="table" style="table-layout: fixed; margin-top: 70px" id="tabla">
+        <thead>
+        <tr>
+            <td style="width: 30%; box-sizing: border-box">
+                User
+            </td>
+            <td style="width: 50%; box-sizing: border-box">
+                Comment
+            </td>
+            <td style="box-sizing: border-box">
+                Options
+            </td>
+        </tr>
+        </thead>
+        <div id="tbrow">
+            @foreach (var x in Model.Comments)
+            {
+                reportirao = false;
+                <tr >
+                    <td style="align-content: center;">
+                        <a id="manage" asp-controller="User" asp-action="ViewProfile" asp-route-UserID="@x.UserID">@x.User.UserName</a>
+                    </td>
+                    <td> @x.CommentContent</td>
+                    <div>
+                        @if (x.Reports > 0)
+                        {
+                            @foreach (var i in x.RUIDS)
+                            {
+                                if (i != null)
+                                {
+                                    //provjerava je li sadasnji korisnik prijavio ovaj komentar vec
+                                    if (i.CommentID == x.CommentID && i.UserID == UserManager.GetUserId(User))
+                                    {
+                                        reportirao = true;
+                                    }
+                                }
+
+                            }
+                        }
+
+                        @if (reportirao == true)
+                        {
+                            <td> <a onclick="reported()" id="hob" style="cursor: not-allowed" asp-controller="Comments" asp-action="Report" asp-route-CommentID="@x.CommentID" asp-route-UserID="@UserManager.GetUserId(User)"> Comment Reported </a></td>
+
+                        }
+                        else
+                        {
+                            if (UserManager.GetUserId(User) != null)
+                            {
+                                <td>
+
+                                    @Html.ActionLink("Report", "Report", "Comments", new {CommentID = x.CommentID, UserID = UserManager.GetUserId(User)}, null)
+                                    @*<a  asp-controller="Comments" asp-action="Report" asp-route-CommentID="@x.CommentID" asp-route-UserID="@UserManager.GetUserId(User)"> Report </a>*@
+                                </td>
+
+                            }
+                        }
+                        @if (UserManager.GetUserId(User) == null)
+                        {
+                            <td>
+                                <p>Log in to report comments</p>
+                            </td>}
+
+                        @if (User.IsInRole("Admin"))
+                        {
+
+                            <td> @Html.ActionLink("Delete", "Delete", "Comments", new {CommentID = x.CommentID}, null)@*<a asp-controller="Comments" asp-action="Delete" asp-route-CommentID="@x.CommentID"> Delete </a>*@</td>
+
+                        }
+                    </div>
+                </tr>
+            }
+        </div>
+    </table>
+</div>
+
+
+</body>
+</html>
+<style>
+    thead {
+        border-bottom: 2px solid #343a40;
+        font-weight: 900;
+    }
+
+    #editButton {
+        float: right;
+        background-color: #343a40;
+    }
+
+    #imgButton {
+        margin-top: 10px;
+        background-color: #343a40;
+    }
+
+    #window {
+        width: 100%;
+        border: solid 1px;
+    }
+
+    #top_bar {
+        background: #FEFEFE;
+        height: 100%;
+        width: 100%;
+    }
+
+    #button {
+        border: solid 1px;
+        width: 25px;
+        height: 23px;
+        float: right;
+        cursor: pointer;
+    }
+
+    #gallery {
+        /*height: 250px;*/
+        background: #DFDFDF;
+        display: none
+    }
+
+
+    #myImg {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        #myImg:hover {
+            opacity: 0.7;
+        }
+
+    /* The Modal (background) */
+
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1;
+        /* Sit on top */
+        padding-top: 100px;
+        /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.9);
+        /* Black w/ opacity */
+    }
+
+
+    /* Modal Content (image) */
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
+
+
+    /* Caption of Modal Image */
+
+    #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+
+
+    /* Add Animation */
+
+    .modal-content,
+    #caption {
+        -webkit-animation-name: zoom;
+        -webkit-animation-duration: 0.6s;
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+
+    -webkit-keyframes zoom {
+        from
+
+    {
+        -webkit-transform: scale(0)
+    }
+
+    to {
+        -webkit-transform: scale(1)
+    }
+
+    }
+
+    keyframes zoom {
+        from
+
+    {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
+
+    }
+
+
+    /* The Close Button */
+
+    .close {
+        position: absolute;
+        top: 100px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+    /* 100% Image Width on Smaller Screens */
+
+    media only screen and (max-width: 700px) {
+        .modal-content
+
+    {
+        width: 100%;
+    }
+
+    }
+
+
+    /* end of image hover */
+
+    #portfolio {
+        margin: 1rem 0;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+        -webkit-column-gap: 1rem;
+        -moz-column-gap: 1rem;
+        column-gap: 1rem;
+        -webkit-column-width: 33.33333333333333%;
+        -moz-column-width: 33.33333333333333%;
+        column-width: 33.33333333333333%;
+    }
+
+    .tile {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        -webkit-transition: all 350ms ease;
+        transition: all 350ms ease;
+    }
+
+    #hob:hover {
+        pointer-events: none;
+        color: black;
+    }
+
+    .tile:hover {
+    }
+
+    .scale-anm {
+        transform: scale(1);
+    }
+
+    .tile img {
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        margin-bottom: 1rem;
+    }
+
+    hr {
+        width: 500px;
+        color: #D40000;
+    }
+
+    ::-moz-focus-inner {
+        border: 0;
+        padding: 0;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
+
+<script>
+    'use strict';
+    var connection = new signalR.HubConnectionBuilder().withUrl("/hub").build();
+
+    connection.on("recievemessage", function (message) {
+        if (@Model.MediaID == message.mediaID) {
+           // console.log(message.userID + '1'); // tocan nacin pristupanja
+           var userid = message.userID;
+            var cmid = message.commentID;
+            var username = message.user.userName;
+            var tbl = document.getElementById("tabla").getElementsByTagName("tbody")[0];
+            var row = tbl.insertRow(0);
+            var cell = row.insertCell(0);
+            var cell1 = row.insertCell(1);
+            var cell2 = row.insertCell(2);
+            var cell3 = row.insertCell(3);
+            cell.innerHTML = "<span> <a href = 'https://p1752.app.fit.ba/User/ViewProfile?UserID=" + userid + "'>" + username + "</a></span>";
+            cell1.innerHTML = message.commentContent;
+            var strng = "@UserManager.GetUserId(User)";
+            if (strng === "") {
+                cell2.innerHTML = "Log in to report comments";
+
+            } else {
+                cell2.innerHTML = "<span> <a href = 'https://p1752.app.fit.ba/Comments/Report?CommentID=" + cmid + "&UserID=" + userid + "'>Report</a></span>";
+            }
+
+            var check = "@User.IsInRole("Admin")";
+            console.log(check);
+            if (check==="True") {
+                
+                cell3.innerHTML = "<span> <a href = 'https://p1752.app.fit.ba/Comments/Delete?CommentID=" + cmid+ "'>Delete</a></span>";
+            }
+
+
+        }
+
+
+
+    });
+
+    connection.start().catch(function(err) {
+        console.log(err.toString());
+    });
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    //ako je ID trenutnog usera vec u ID-ovima komentara onda onemogucava daljnje reportove
+    function reported() {
+        alert("You have already reported this comment!");
+    }
+
+
+    var modal = document.getElementById('myModal');
+
+    // Uzimanje slike i stavljanje u modal
+    var img = document.getElementsByClassName('modal_image');
+    for (var i = 0; i < img.length; i++) {
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        img[i].addEventListener('click',
+            function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                captionText.innerHTML = this.alt;
+            })
+    }
+
+    // span koji zatvara modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // klik na span zatvara modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    //slideToggle za image gallery
+    $("#button").click(function() {
+        if ($(this).html() == "-") {
+            $(this).html("+");
+        } else {
+            $(this).html("-");
+        }
+        $("#gallery").slideToggle('1', 'linear');
+    });
+    // staviti expandable div za mistake report
+
+    var coll = document.getElementById("ReportDiv");
+    $("#mistakebutton").on("click",
+        function() {
+            if (coll.style.display === "initial") {
+                coll.style.display = "none";
+            } else {
+                coll.style.display = "initial";
+                $.get("/Mistake/DodajForma?mediaid=" + @Model.MediaID,
+                    function(odgovor) {
+                        $("#ReportDiv").html(odgovor);
+                    });
+            }
+
+        });
+
+
+</script>

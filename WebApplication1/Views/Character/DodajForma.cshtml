@@ -1,0 +1,65 @@
+﻿@using ClassLibrary1.Model;
+@{
+    //Layout = "_Layout";
+}
+@model WebApplication1.ViewModels.AddCharacterVM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DodajForma</title>
+</head>
+<body>
+    <form action="/Character/SnimiForma" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="CharacterID" style="display: none" />
+
+        <div class="form-group">
+            <label>First Name</label>
+            <input class="form-control" asp-for="FirstName" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Last Name</label>
+            <input class="form-control" asp-for="LastName" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Description</label><br />
+            @Html.TextAreaFor(model => model.Description, new { style = "resize: none;", @class = "form-control", @rows = 8, @cols = 70 })
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Age</label>
+            <input class="form-control" asp-for="Age" />
+            <span asp-validation-for="Age" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" class="form-control" asp-for="DateOfBirth" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Date of Death</label>
+            <input type="date" class="form-control" asp-for="DateOfDeath" />
+            <span asp-validation-for="DateOfDeath" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Gender</label>
+            <select class="form-control" asp-for="GenderID" asp-items="Model.GenderStavke">
+                <option></option>
+            </select>
+            <span asp-validation-for="GenderID" class="text-danger"></span>
+        </div>
+
+        <input type="submit" class="btn btn-primary" id="submitButton"/>
+    </form>
+</body>
+</html>
+<style>
+    #submitButton {
+        background-color: #343a40;
+    }
+</style>
